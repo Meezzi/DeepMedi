@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.navigation.compose.rememberNavController
+import com.meezzi.deepmedi.presentation.navigation.AppNavGraph
 import com.meezzi.deepmedi.ui.theme.DeepMediTheme
 
 class MainActivity : ComponentActivity() {
@@ -12,7 +14,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             DeepMediTheme {
-
+                val navController = rememberNavController()
+                AppNavGraph(navController)
             }
         }
     }
