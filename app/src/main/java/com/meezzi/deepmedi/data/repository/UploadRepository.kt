@@ -4,6 +4,7 @@ import com.meezzi.deepmedi.data.api.ApiService
 import com.meezzi.deepmedi.data.exception.UploadRepositoryException
 import com.meezzi.deepmedi.data.model.AuthRequest
 import com.meezzi.deepmedi.data.model.ImageUploadResponse
+import com.meezzi.deepmedi.data.model.UserAttribute
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -49,6 +50,17 @@ class UploadRepository @Inject constructor(
                 ?: throw UploadRepositoryException("사용자 정보가 없습니다.")
         } else {
             throw UploadRepositoryException("사용자 정보 요청 실패: ${response.errorBody()?.string()}")
+        }
+    }
+
+    // 4. 사용자 속성 조회
+    private suspend fun fetchUserAttributes(userId: String, token: String): List<UserAttribute> {
+        val response = loginApiService.fetchUserAttributes(userId, "Bearer $token")
+
+        return if (response.isSuccessful) {
+            response.body() ?: throw UploadRepositoryException("사용자 정보가 없습니다.")
+        } else {
+            throw UploadRepositoryException("사용자 속성 요청 실패: ${response.errorBody()?.string()}")
         }
     }
 
