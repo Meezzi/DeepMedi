@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">DeepMedi</string>
+
+    <!--   공통   -->
+    <string name="setting">설정</string>
+    <string name="camera">카메라</string>
+    <string name="confirm">확인</string>
+    <string name="close">닫기</string>
+
+    <!--   권한 요청 화면   -->
+    <string name="required_permission">필수 접근 권한</string>
+    <string name="permission_title">원활한 서비스 이용을 위한\n접근 권한 허용 안내</string>
+    <string name="permission_dialog_title">필수 권한 허용 안내</string>
+    <string name="permission_camera_label">사진 촬영으로 건강 상태를 측정해요</string>
+    <string name="permission_dialog_content">카메라 권한은 건강 정보를 측정하기 위해 필요한 권한입니다.</string>
 </resources>
