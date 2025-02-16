@@ -33,4 +33,11 @@ object AuthNetworkModule {
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()
     }
+
+    @Provides
+    @Singleton
+    @Named("LoginApiService")
+    fun provideLoginApiService(@Named("LoginRetrofit") retrofit: Retrofit): ApiService {
+        return retrofit.create(ApiService::class.java)
+    }
 }
