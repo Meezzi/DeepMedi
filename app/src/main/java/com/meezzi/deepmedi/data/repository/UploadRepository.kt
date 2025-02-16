@@ -2,6 +2,7 @@ package com.meezzi.deepmedi.data.repository
 
 import com.meezzi.deepmedi.data.api.ApiService
 import com.meezzi.deepmedi.data.exception.UploadRepositoryException
+import com.meezzi.deepmedi.data.model.AuthRequest
 import com.meezzi.deepmedi.data.model.ImageUploadResponse
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -24,6 +25,18 @@ class UploadRepository @Inject constructor(
             response.body() ?: throw UploadRepositoryException("업로드 응답이 없습니다.")
         } else {
             throw UploadRepositoryException("업로드 실패: ${response.errorBody()?.string()}")
+        }
+    }
+
+    // 2. 사용자 인증 요청
+    private suspend fun authenticateUser(email: String, password: String): String {
+        val authRequest = AuthRequest(username = email, password = password)
+        val response = loginApiService.authenticateUser(authRequest)
+
+        return if (response.isSuccessful) {
+            response.body()?.token ?: throw UploadRepositoryException("사용자 인증 응답이 없습니다.")
+        } else {
+            throw UploadRepositoryException("사용자 인증 실패: ${response.errorBody()?.string()}")
         }
     }
 
