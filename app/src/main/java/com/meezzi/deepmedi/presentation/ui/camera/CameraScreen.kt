@@ -5,14 +5,18 @@ import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,8 +39,14 @@ fun CameraScreen(
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
     val cameraController = rememberCameraController(context, lifecycleOwner)
 
+    val isLoading by cameraViewModel.isLoading.collectAsState()
+
     Box(modifier = Modifier.fillMaxSize()) {
         CameraPreview(cameraController)
+
+        if (isLoading) {
+            LoadingIndicator()
+        }
 
         Column(
             modifier = Modifier
@@ -44,6 +54,7 @@ fun CameraScreen(
                 .padding(80.dp)
         ) {
             CaptureButton(
+                isEnabled = !isLoading,
                 onclick = {
                     cameraViewModel.captureImage(
                         cameraController = cameraController,
@@ -63,13 +74,27 @@ fun CameraScreen(
 }
 
 @Composable
+private fun LoadingIndicator() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White.copy(alpha = 0.5f)),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(color = Color.Blue)
+    }
+}
+
+@Composable
 private fun CaptureButton(
+    isEnabled: Boolean,
     onclick: () -> Unit,
 ) {
     IconButton(
         onClick = { onclick() },
         modifier = Modifier
             .size(70.dp),
+        enabled = isEnabled,
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_camera_button),
