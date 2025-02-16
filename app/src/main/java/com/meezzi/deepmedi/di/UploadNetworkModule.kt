@@ -33,4 +33,11 @@ object UploadNetworkModule {
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()
     }
+
+    @Provides
+    @Singleton
+    @Named("UploadApiService")
+    fun provideUploadApiService(@Named("UploadRetrofit") retrofit: Retrofit): ApiService {
+        return retrofit.create(ApiService::class.java)
+    }
 }
