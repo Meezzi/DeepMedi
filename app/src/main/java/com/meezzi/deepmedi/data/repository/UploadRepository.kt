@@ -40,6 +40,18 @@ class UploadRepository @Inject constructor(
         }
     }
 
+    // 3. 사용자 정보 가져오기
+    private suspend fun fetchUserIdFromToken(token: String): String {
+        val response = loginApiService.fetchUserInfo("Bearer $token")
+
+        return if (response.isSuccessful) {
+            response.body()?.userIdentifier?.id
+                ?: throw UploadRepositoryException("사용자 정보가 없습니다.")
+        } else {
+            throw UploadRepositoryException("사용자 정보 요청 실패: ${response.errorBody()?.string()}")
+        }
+    }
+
     // Multipart 데이터 생성
     private fun createMultipartBody(imageFile: File): MultipartBody.Part {
         val requestFile = imageFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
