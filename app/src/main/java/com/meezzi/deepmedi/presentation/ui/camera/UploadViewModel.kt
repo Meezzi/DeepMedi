@@ -15,7 +15,7 @@ import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
-class CameraViewModel @Inject constructor(
+class UploadViewModel @Inject constructor(
     private val cameraService: CameraService,
     private val uploadRepository: UploadRepository,
 ) : ViewModel() {
