@@ -28,7 +28,11 @@ fun AppNavGraph(navController: NavHostController = rememberNavController()) {
         }
 
         composable(Screen.Camera.route) {
-            CameraScreen()
+            CameraScreen(
+                onNavigateToResult = {
+                    navController.navigate(Screen.Result.route)
+                },
+            )
         }
 
         composable(Screen.Result.route) {
