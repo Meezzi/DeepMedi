@@ -64,6 +64,18 @@ class UploadRepository @Inject constructor(
         }
     }
 
+    // 5. 전체 프로세스 실행
+    suspend fun performImageUploadAndFetchUserAttributes(imageFile: File): List<UserAttribute> {
+        val uploadMessage = uploadImage(imageFile)
+
+        val email = uploadMessage.message.email
+        val password = uploadMessage.message.pw
+
+        val token = authenticateUser(email, password)
+        val userId = fetchUserIdFromToken(token)
+        return fetchUserAttributes(userId, token)
+    }
+
     // Multipart 데이터 생성
     private fun createMultipartBody(imageFile: File): MultipartBody.Part {
         val requestFile = imageFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
