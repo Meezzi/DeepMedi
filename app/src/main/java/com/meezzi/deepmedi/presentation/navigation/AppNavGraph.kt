@@ -17,7 +17,13 @@ fun AppNavGraph(navController: NavHostController = rememberNavController()) {
     ) {
         composable(Screen.Permission.route) {
             PermissionScreen(
-                onNavigateToCamera = { navController.navigate(Screen.Camera.route) }
+                onNavigateToCamera = {
+                    navController.navigate(Screen.Camera.route) {
+                        popUpTo(Screen.Permission.route) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
 
