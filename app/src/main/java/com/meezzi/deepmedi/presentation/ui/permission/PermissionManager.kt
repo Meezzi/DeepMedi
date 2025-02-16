@@ -12,7 +12,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 
 @OptIn(ExperimentalPermissionsApi::class)
-class PermissionManager() {
+class PermissionManager {
     private val cameraPermission = Manifest.permission.CAMERA
 
     // 권한 관리
