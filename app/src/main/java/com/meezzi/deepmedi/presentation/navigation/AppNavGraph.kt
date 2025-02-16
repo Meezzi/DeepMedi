@@ -13,7 +13,7 @@ import com.meezzi.deepmedi.presentation.ui.result.ResultScreen
 fun AppNavGraph(navController: NavHostController = rememberNavController()) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Camera.route
+        startDestination = Screen.Permission.route
     ) {
         composable(Screen.Permission.route) {
             PermissionScreen(
