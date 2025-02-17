@@ -33,13 +33,13 @@ import com.meezzi.deepmedi.R
 @Composable
 fun CameraScreen(
     onNavigateToResult: () -> Unit,
-    cameraViewModel: CameraViewModel = hiltViewModel(),
+    uploadViewModel: UploadViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
     val cameraController = rememberCameraController(context, lifecycleOwner)
 
-    val isLoading by cameraViewModel.isLoading.collectAsState()
+    val isLoading by uploadViewModel.isLoading.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
         CameraPreview(cameraController)
@@ -56,7 +56,7 @@ fun CameraScreen(
             CaptureButton(
                 isEnabled = !isLoading,
                 onclick = {
-                    cameraViewModel.captureImage(
+                    uploadViewModel.captureImage(
                         cameraController = cameraController,
                         onSuccess = { onNavigateToResult() },
                         onError = {
@@ -74,7 +74,7 @@ fun CameraScreen(
 }
 
 @Composable
-private fun LoadingIndicator() {
+fun LoadingIndicator() {
     Box(
         modifier = Modifier
             .fillMaxSize()
