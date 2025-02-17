@@ -114,4 +114,18 @@ class UploadViewModel @Inject constructor(
         }
         return 0
     }
+
+    private fun extractHeartRateStatus(userAttributes: List<UserAttribute>): String {
+        val heartRateValue =
+            userAttributes.find { it.key == "hr" }?.value?.jsonPrimitive?.int ?: return "정상"
+
+        return when (heartRateValue) {
+            in 0..40 -> "위험"
+            in 41..60 -> "경고"
+            in 61..80 -> "관심"
+            in 81..100 -> "정상"
+            in 101..120 -> "건강"
+            else -> "위험"
+        }
+    }
 }
