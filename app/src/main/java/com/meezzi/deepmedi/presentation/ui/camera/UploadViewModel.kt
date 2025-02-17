@@ -7,11 +7,16 @@ import com.meezzi.deepmedi.data.exception.UploadRepositoryException
 import com.meezzi.deepmedi.data.model.UserAttribute
 import com.meezzi.deepmedi.data.repository.UploadRepository
 import com.meezzi.deepmedi.domain.camera.CameraService
+import com.meezzi.deepmedi.presentation.ui.state.HealthStatus
+import com.meezzi.deepmedi.presentation.ui.state.UserInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.jsonPrimitive
 import java.io.File
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,14 +25,27 @@ class UploadViewModel @Inject constructor(
     private val uploadRepository: UploadRepository,
 ) : ViewModel() {
 
+    // UserInfo 하나로 묶어서 관리
+    private val _userInfo = MutableStateFlow(
+        UserInfo(
+            gender = "여성",
+            age = 31,
+            healthStatus = HealthStatus(
+                heartRate = 88,
+                heartRateStatus = "정상",
+                bloodPressure = Pair(133, 74),
+                bloodPressureStatus = "위험",
+                mainMessage = "건강에 대한 관심이 필요합니다."
+            )
+        )
+    )
+    val userInfo: StateFlow<UserInfo> = _userInfo
+
     private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> get() = _isLoading
+    val isLoading: StateFlow<Boolean> = _isLoading
 
-    private val _userAttributes = MutableStateFlow<List<UserAttribute>>(emptyList())
-    val userAttributes: StateFlow<List<UserAttribute>> = _userAttributes
-
-    private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> get() = _errorMessage
+    private val _errorMessage = MutableStateFlow("")
+    val errorMessage: StateFlow<String> = _errorMessage
 
     fun captureImage(
         cameraController: CameraController,
@@ -61,5 +79,15 @@ class UploadViewModel @Inject constructor(
                 _errorMessage.value = "예상치 못한 오류가 발생했습니다."
             }
         }
+    }
+
+    private fun getGender(userAttributes: List<UserAttribute>): String {
+        return userAttributes.find { it.key == "gender" }?.value?.jsonPrimitive?.content?.let {
+            when (it) {
+                "0" -> "남성"
+                "1" -> "여성"
+                else -> "알 수 없음"
+            }
+        } ?: "알 수 없음"
     }
 }
