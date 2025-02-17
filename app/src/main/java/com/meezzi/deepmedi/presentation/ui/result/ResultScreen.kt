@@ -74,6 +74,12 @@ fun ResultScreen(uploadViewModel: UploadViewModel = hiltViewModel()) {
                 value = userInfo.healthStatus.heartRate.toString(),
                 status = userInfo.healthStatus.heartRateStatus
             )
+
+            BloodPressureItem(
+                label = stringResource(R.string.blood_pressure),
+                value = userInfo.healthStatus.bloodPressure,
+                status = userInfo.healthStatus.bloodPressureStatus,
+            )
         }
     }
 }
@@ -124,6 +130,76 @@ fun HeartRateItem(label: String, value: String, status: String) {
                 }
                 Text(
                     stringResource(R.string.result_range_heart_rate),
+                    color = Color.Gray,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun BloodPressureItem(label: String, value: Pair<Int, Int>, status: String) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = label,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.DarkGray,
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                StatusTag(
+                    status = status,
+                    backgroundColor = getStatusColor(status)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Row(verticalAlignment = Alignment.Bottom) {
+                    Text(
+                        text = "${value.first} ",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Text(
+                        text = "(SYS)",
+                        color = Color.Gray,
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
+
+                Row(verticalAlignment = Alignment.Bottom) {
+                    Text(
+                        text = "${value.second} ",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Text(
+                        text = "(DIA)",
+                        color = Color.Gray,
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
+
+                Text(
+                    stringResource(R.string.result_range_blood_pressure),
                     color = Color.Gray,
                     fontWeight = FontWeight.SemiBold
                 )
