@@ -71,14 +71,51 @@ class UploadViewModel @Inject constructor(
     private fun uploadImage(imageFile: File) {
         viewModelScope.launch {
             try {
-                _userAttributes.value =
+                _isLoading.value = true
+                val userAttributes =
                     uploadRepository.performImageUploadAndFetchUserAttributes(imageFile)
+                updateUserInfo(userAttributes)
+                _isLoading.value = false
             } catch (e: UploadRepositoryException) {
-                _errorMessage.value = e.message
+                _isLoading.value = false
+                _errorMessage.value = e.message.toString()
             } catch (e: Exception) {
+                _isLoading.value = false
                 _errorMessage.value = "예상치 못한 오류가 발생했습니다."
             }
         }
+    }
+
+    private fun updateUserInfo(userAttributes: List<UserAttribute>) {
+        val gender = getGender(userAttributes)
+
+        // 임시 값을 사용했습니다.
+        val age = extractAge(userAttributes)
+        val heartRateStatus = extractHeartRateStatus(userAttributes)
+        val bloodPressureStatus = extractBloodPressureStatus(userAttributes)
+        val mainMessage = when {
+            heartRateStatus == "정상" && bloodPressureStatus == "정상" -> {
+                "건강한 상태입니다."
+            }
+
+            heartRateStatus == "위험" || bloodPressureStatus == "위험" -> {
+                "건강에 위험이 있습니다."
+            }
+
+            else -> {
+                "건강에 대한 관심이 필요합니다."
+            }
+        }
+
+        val healthStatus = HealthStatus(
+            heartRate = 88,
+            heartRateStatus = heartRateStatus,
+            bloodPressure = Pair(133, 74),
+            bloodPressureStatus = bloodPressureStatus,
+            mainMessage = mainMessage
+        )
+
+        _userInfo.value = UserInfo(gender = gender, age = age, healthStatus = healthStatus)
     }
 
     private fun getGender(userAttributes: List<UserAttribute>): String {
