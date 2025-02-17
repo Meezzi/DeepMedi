@@ -74,7 +74,7 @@ fun CameraScreen(
 }
 
 @Composable
-private fun LoadingIndicator() {
+fun LoadingIndicator() {
     Box(
         modifier = Modifier
             .fillMaxSize()
