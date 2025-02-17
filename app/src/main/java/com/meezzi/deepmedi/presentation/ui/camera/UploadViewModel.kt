@@ -90,4 +90,28 @@ class UploadViewModel @Inject constructor(
             }
         } ?: "알 수 없음"
     }
+
+    private fun extractAge(userAttributes: List<UserAttribute>): Int {
+        val birthValue =
+            userAttributes.find { it.key == "birth" }?.value?.jsonPrimitive?.content ?: ""
+        if (birthValue.isNotEmpty()) {
+            val birthYear = birthValue.substring(0, 4).toInt()
+            val birthMonth = birthValue.substring(4, 6).toInt()
+            val birthDay = birthValue.substring(6, 8).toInt()
+
+            val currentDate = Calendar.getInstance()
+            val birthDate = Calendar.getInstance().apply {
+                set(birthYear, birthMonth - 1, birthDay)
+            }
+            var age = currentDate.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR)
+            if (currentDate.get(Calendar.MONTH) < birthDate.get(Calendar.MONTH) ||
+                (currentDate.get(Calendar.MONTH) == birthDate.get(Calendar.MONTH) &&
+                        currentDate.get(Calendar.DAY_OF_MONTH) < birthDate.get(Calendar.DAY_OF_MONTH))
+            ) {
+                age--
+            }
+            return age
+        }
+        return 0
+    }
 }
