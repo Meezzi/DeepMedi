@@ -128,4 +128,25 @@ class UploadViewModel @Inject constructor(
             else -> "위험"
         }
     }
+
+    private fun extractBloodPressureStatus(userAttributes: List<UserAttribute>): String {
+        val bpValue =
+            userAttributes.find { it.key == "bp" }?.value?.jsonPrimitive?.content ?: return ""
+        val bpParts = bpValue.split(",")
+
+        val sys = bpParts[0].toIntOrNull()
+        val dia = bpParts[1].toIntOrNull()
+
+        if (sys != null && dia != null) {
+            return when {
+                sys in 0..30 && dia in 0..59 -> "위험"
+                sys in 31..60 && dia in 60..70 -> "경고"
+                sys in 61..80 && dia in 71..80 -> "관심"
+                sys in 81..90 && dia in 81..90 -> "정상"
+                sys in 91..Int.MAX_VALUE && dia in 101..Int.MAX_VALUE -> "건강"
+                else -> "위험"
+            }
+        }
+        return "위험"
+    }
 }
