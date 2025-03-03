@@ -4,7 +4,7 @@ import androidx.camera.view.CameraController
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.meezzi.deepmedi.data.exception.UploadRepositoryException
-import com.meezzi.deepmedi.data.model.UserAttribute
+import com.meezzi.deepmedi.data.mapper.UserAttributeMapper
 import com.meezzi.deepmedi.data.repository.UploadRepository
 import com.meezzi.deepmedi.domain.camera.CameraService
 import com.meezzi.deepmedi.presentation.ui.state.HealthStatus
@@ -13,10 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.int
-import kotlinx.serialization.json.jsonPrimitive
 import java.io.File
-import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -74,7 +71,7 @@ class UploadViewModel @Inject constructor(
                 _isLoading.value = true
                 val userAttributes =
                     uploadRepository.performImageUploadAndFetchUserAttributes(imageFile)
-                updateUserInfo(userAttributes)
+                _userInfo.value = UserAttributeMapper.mapToUserInfo(userAttributes)
                 _isLoading.value = false
             } catch (e: UploadRepositoryException) {
                 _isLoading.value = false
