@@ -28,14 +28,14 @@ class UploadViewModel @Inject constructor(
     // UserInfo 하나로 묶어서 관리
     private val _userInfo = MutableStateFlow(
         UserInfo(
-            gender = "여성",
-            age = 31,
+            gender = "알 수 없음",
+            age = 0,
             healthStatus = HealthStatus(
-                heartRate = 88,
-                heartRateStatus = "정상",
-                bloodPressure = Pair(133, 74),
-                bloodPressureStatus = "위험",
-                mainMessage = "건강에 대한 관심이 필요합니다."
+                heartRate = 0,
+                heartRateStatus = "알 수 없음",
+                bloodPressure = Pair(0, 0),
+                bloodPressureStatus = "알 수 없음",
+                mainMessage = "알 수 없음",
             )
         )
     )
